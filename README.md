@@ -1,6 +1,6 @@
-# distributed-systems-course
+# Курс: Паттерны и компоненты современных распределенных систем
 
-Паттерны и компоненты современных распределенных систем
+сайт курса [https://kirya522.tech/distributed-systems-course/](https://kirya522.tech/distributed-systems-course/)
 
 ## Автор
 
@@ -8,23 +8,28 @@
 
 ## Документация по разработке сайта
 
-Submodule init is required
+Установить hugo
+```sh
+brew install hugo
+```
+
+Инициализация submodule
 ```
 git submodule update --init
 ```
 
-To start server
+Запуск сервера
 ```sh
 hugo server --buildDrafts
 ```
 server will start at http://localhost:1313/
 
-Add new post
+Создать новый пост
 ```sh
 hugo new posts/<name>.md
 ```
 
-To package artifact
+Публикация артефактов, в actions используется `-minify`
 ```sh
 hugo
 ```
