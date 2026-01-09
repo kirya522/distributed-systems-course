@@ -4,9 +4,16 @@ languageName = "Russian"
 defaultContentLanguage = "ru"
 enableEmoji = true
 enableRobotsTXT = false
-title = 'Паттерны и компоненты современных распределенных систем'
-theme = ['techdoc']
+title = 'Курс: паттерны распределенных систем'
+theme = ['hugo-book']
 enableGitInfo = true
+
+# browser tab name
+description = "Бесплатный, open-source курс по паттернам и компонентам современных распределенных систем"
+
+[params.author]
+name = "Кирилл Грищук"
+email = "kirya522@gmail.com"
 
 
 [caches]
