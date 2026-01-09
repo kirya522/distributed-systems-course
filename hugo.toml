@@ -1,9 +1,18 @@
 baseURL = 'https://kirya522.github.io/distributed-systems-course/'
 languageCode = 'ru-ru'
+languageName = "Russian"
+defaultContentLanguage = "ru"
+enableEmoji = true
+enableRobotsTXT = false
 title = 'Паттерны и компоненты современных распределенных систем'
-theme = 'techdoc'
+theme = ['techdoc']
 enableGitInfo = true
+
 
 [caches]
   [caches.images]
     dir = ':cacheDir/images'
+
+
+#analytics
+googleAnalytics = "UA-158616174-1"
