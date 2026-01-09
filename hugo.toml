@@ -1,0 +1,9 @@
+baseURL = 'https://kirya522.github.io/distributed-systems-course/'
+languageCode = 'ru-ru'
+title = 'Паттерны и компоненты современных распределенных систем'
+theme = 'techdoc'
+enableGitInfo = true
+
+[module]
+[[module.imports]]
+path = 'github.com/thingsym/hugo-theme-techdoc'
