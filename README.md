@@ -6,6 +6,10 @@
 
 Кирилл Грищук
 
+## Документация для темы
+
+https://github.com/alex-shpak/hugo-book?tab=readme-ov-file
+
 ## Документация по разработке сайта
 
 Установить hugo
@@ -23,11 +27,6 @@ git submodule update --init
 hugo server --buildDrafts
 ```
 server will start at http://localhost:1313/
-
-Создать новый пост
-```sh
-hugo new posts/<name>.md
-```
 
 Публикация артефактов, в actions используется `-minify`
 ```sh
