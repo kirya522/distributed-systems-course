@@ -11,6 +11,16 @@ enableGitInfo = true
 # browser tab name
 description = "Бесплатный, open-source курс по паттернам и компонентам современных распределенных систем"
 
+[params]
+  BookTheme = 'auto'
+  BookLogo = 'logo.png'
+  BookFavicon = 'favicon.ico'
+  BookSection = '*'
+  BookPortableLinks = true
+  BookRepo = 'https://github.com/kirya522/distributed-systems-course'
+  BookCommitPath = 'commit'
+  BookEditPath = 'edit/main'
+
 [params.author]
 name = "Кирилл Грищук"
 email = "kirya522@gmail.com"
@@ -24,11 +34,3 @@ email = "kirya522@gmail.com"
 [services]
 [services.googleAnalytics]
   id = "UA-158616174-1"
-
-[params]
-    BookTheme = 'auto'
-    BookSection = '*'
-    BookPortableLinks = true
-    BookRepo = 'https://github.com/kirya522/distributed-systems-course'
-    BookCommitPath = 'commit'
-    BookEditPath = 'edit/main'
