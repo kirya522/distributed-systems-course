@@ -4,10 +4,6 @@ title = 'Паттерны и компоненты современных рас�
 theme = 'techdoc'
 enableGitInfo = true
 
-[module]
-[[module.imports]]
-path = 'github.com/thingsym/hugo-theme-techdoc'
-
 [caches]
   [caches.images]
     dir = ':cacheDir/images'
