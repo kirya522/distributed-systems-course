@@ -22,4 +22,6 @@ email = "kirya522@gmail.com"
 
 
 #analytics
-googleAnalytics = "UA-158616174-1"
+[services]
+[services.googleAnalytics]
+  id = "UA-158616174-1"
