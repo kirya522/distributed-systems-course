@@ -20,8 +20,15 @@ email = "kirya522@gmail.com"
   [caches.images]
     dir = ':cacheDir/images'
 
-
 #analytics
 [services]
 [services.googleAnalytics]
   id = "UA-158616174-1"
+
+[params]
+    BookTheme = 'auto'
+    BookSection = '*'
+    BookPortableLinks = true
+    BookRepo = 'https://github.com/kirya522/distributed-systems-course'
+    BookCommitPath = 'commit'
+    BookEditPath = 'edit/main'
