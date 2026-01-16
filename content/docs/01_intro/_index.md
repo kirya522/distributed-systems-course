@@ -405,3 +405,5 @@ sequenceDiagram
 - [В пост с анонсом раздела в telegram](https://t.me/kirya522)
 - [telegram чат курса и канала](https://t.me/kirya522_chat)
 - [boosty автору напрямую](https://boosty.to/kirya522)
+
+{{< button href="https://boosty.to/kirya522" >}}Поддержать автора{{< /button >}}

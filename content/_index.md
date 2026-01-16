@@ -56,3 +56,5 @@ Open-source курс по текущим актуальным принципам
 ## Автор
 
 - [Кирилл Грищук](https://t.me/kirya522)
+
+{{< button href="https://boosty.to/kirya522" >}}Поддержать автора{{< /button >}}

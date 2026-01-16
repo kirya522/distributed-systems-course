@@ -12,7 +12,7 @@ https://github.com/alex-shpak/hugo-book?tab=readme-ov-file
 
 ## Документация по разработке сайта
 
-Установить hugo
+Установить [hugo](https://gohugo.io/installation/windows/)
 ```sh
 brew install hugo
 ```
