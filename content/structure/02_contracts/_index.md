@@ -28,6 +28,8 @@ weight = 2
 
 Важно понимать, что нарушение контракта почти всегда приводит к каскадным отказам. Код может успешно собираться и раскатываться, но система в целом перестаёт работать корректно. Именно поэтому контракты требуют такого же внимания, как и бизнес-логика.
 
+![contract_meme](./img/api_contract.jpg)
+
 ## Виды контрактов и способы взаимодействия
 
 На практике чаще всего встречаются два класса контрактов: **синхронные** и **асинхронные**.
@@ -37,6 +39,8 @@ weight = 2
 Асинхронные контракты основаны на событиях. Сервис публикует факт произошедшего изменения, а потребители обрабатывают его независимо. Такой подход снижает связанность и повышает устойчивость системы, но усложняет отладку и работу с согласованностью данных. Появляется eventual-consistency для клиентов и потребителей.
 
 Выбор между синхронным и асинхронным взаимодействием - это архитектурное решение, а не вопрос удобства разработки.
+
+![contract_types](./img/sync_vs_async.jpg)
 
 ### Контракты событий
 
@@ -120,6 +124,8 @@ weight = 2
 - Миграция клиентов на  `/v2/`
 - Удаление первой версии
 
+![api_change](./img/api_change.jpg)
+
 ### Фактически на любом проекте
 
 Системы используют аддитивный подход: новые поля добавляются, старые долго не удаляются, значения по умолчанию выбираются осознанно. Удаление и переименование считаются самыми опасными операциями и требуют отдельного планирования. Есть несколько версий эндпоинтов, потому что всех клиентов не успели мигрировать.
@@ -133,7 +139,7 @@ weight = 2
 
 ### OpenAPI (Swagger)
 
-Самый распространённый стандарт для описания HTTP API.
+Самый распространённый стандарт для описания HTTP API. [Спецификация](https://swagger.io/specification/)
 
 - Описание REST API в YAML / JSON
 - Генерация клиентов и серверных заглушек
@@ -150,9 +156,96 @@ weight = 2
 - Внешние и публичные контракты
 - Интеграции между командами
 
+Пример "создание заказа", попробовать [можно тут](https://editor.swagger.io/)
+```yaml
+openapi: 3.0.3
+info:
+  title: Orders Service API
+  description: Public API for creating orders
+  version: 1.0.0
+
+servers:
+  - url: https://api.example.com
+
+paths:
+
+  /orders:
+    post:
+      summary: Create order
+      description: Creates a new order in the system
+      operationId: createOrder
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/CreateOrderRequest'
+      responses:
+        '201':
+          description: Order successfully created
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/CreateOrderResponse'
+        '400':
+          description: Invalid request
+        '409':
+          description: Business conflict (e.g. invalid state)
+
+components:
+  schemas:
+
+    CreateOrderRequest:
+      type: object
+      required:
+        - userId
+        - items
+      properties:
+        userId:
+          type: string
+          description: Identifier of the user who creates the order
+        items:
+          type: array
+          minItems: 1
+          items:
+            $ref: '#/components/schemas/OrderItem'
+        comment:
+          type: string
+          description: Optional comment for the order
+
+    CreateOrderResponse:
+      type: object
+      required:
+        - orderId
+        - status
+        - createdAt
+      properties:
+        orderId:
+          type: string
+        status:
+          type: string
+          enum: [CREATED]
+        createdAt:
+          type: string
+          format: date-time
+
+    OrderItem:
+      type: object
+      required:
+        - productId
+        - quantity
+      properties:
+        productId:
+          type: string
+        quantity:
+          type: integer
+          minimum: 1
+
+```
+
 ### gRPC / бинарные контракты
 
-Контракт описывается в .proto файлах.
+Контракт описывается в .proto файлах. [Спецификация](https://grpc.io/docs/what-is-grpc/core-concepts/)
 
 - Строго типизированные контракты
 - Быстрая сериализация
@@ -163,9 +256,65 @@ weight = 2
 - Внутренних сервисы
 - Строгого контроля версионирования
 
+Пример, тоже создание заказа
+```
+syntax = "proto3";
+
+package orders.v1;
+
+option go_package = "github.com/example/orders/gen/go/orders/v1";
+option java_package = "com.example.orders.v1";
+option java_multiple_files = true;
+
+// =======================
+// Service
+// =======================
+
+service OrdersService {
+  rpc CreateOrder (CreateOrderRequest) returns (CreateOrderResponse);
+}
+
+// =======================
+// Requests / Responses
+// =======================
+
+message CreateOrderRequest {
+  string user_id = 1;
+
+  repeated OrderItem items = 2;
+
+  // Optional field — safe for extension
+  string comment = 3;
+}
+
+message CreateOrderResponse {
+  string order_id = 1;
+
+  OrderStatus status = 2;
+
+  string created_at = 3; // ISO-8601 (RFC3339)
+}
+
+// =======================
+// Domain models
+// =======================
+
+message OrderItem {
+  string product_id = 1;
+  int32 quantity = 2;
+}
+
+enum OrderStatus {
+  ORDER_STATUS_UNSPECIFIED = 0;
+  ORDER_STATUS_CREATED = 1;
+}
+
+```
+
 ### AsyncAPI
 
-Аналог OpenAPI, но для событий и очередей.
+Аналог OpenAPI, но для событий и очередей. [Спецификация](https://www.asyncapi.com/docs/reference/specification/v3.0.0)
+
 **Описывает**
 
 - Топики
@@ -178,9 +327,83 @@ weight = 2
 - Event-driven архитектур
 - Контракты между продюсерами и консьюмерами
 
+Пример события `OrderCreated` попробовать [можно тут](https://studio.asyncapi.com/)
+```
+asyncapi: 3.0.0
+
+info:
+  title: Orders Events API
+  version: 1.0.0
+  description: Domain events published by Orders service
+
+channels:
+  order.created:
+    address: order.created
+    messages:
+      OrderCreated:
+        $ref: '#/components/messages/OrderCreated'
+
+operations:
+  publishOrderCreated:
+    action: send
+    channel:
+      $ref: '#/channels/order.created'
+    messages:
+      - $ref: '#/channels/order.created/messages/OrderCreated'
+
+components:
+  messages:
+    OrderCreated:
+      name: OrderCreated
+      title: Order created event
+      contentType: application/json
+      payload:
+        $ref: '#/components/schemas/OrderCreatedPayload'
+
+  schemas:
+    OrderCreatedPayload:
+      type: object
+      required:
+        - eventId
+        - orderId
+        - userId
+        - status
+        - createdAt
+      properties:
+        eventId:
+          type: string
+        orderId:
+          type: string
+        userId:
+          type: string
+        status:
+          type: string
+          enum: [CREATED]
+        createdAt:
+          type: string
+          format: date-time
+        items:
+          type: array
+          items:
+            $ref: '#/components/schemas/OrderItem'
+
+    OrderItem:
+      type: object
+      required:
+        - productId
+        - quantity
+      properties:
+        productId:
+          type: string
+        quantity:
+          type: integer
+          minimum: 1
+
+```
+
 ### Apache Avro / Schema Registry
 
-Часто используется вместе с Kafka.
+Часто используется вместе с Kafka. [Спецификация](https://avro.apache.org/docs/1.11.1/specification/)
 
 - Контракты сообщений
 - Контроль совместимости (backward / forward)
@@ -211,6 +434,27 @@ weight = 2
 - Breaking changes без стратегии миграции
 
 Эти ошибки редко выглядят критичными на старте, но со временем становятся источником технического долга и нестабильности системы.
+
+## Дополнительные источники для изучения
+
+- [swagger лучшие практики](https://swagger.io/resources/articles/best-practices-in-api-design/)
+- [microsoft rest api guides](https://github.com/microsoft/api-guidelines)
+- [opensource api guide](https://opensource.zalando.com/restful-api-guidelines/)
+- [статья про версионирование API](https://www.troyhunt.com/your-api-versioning-is-wrong-which-is/)
+- [статья и ролик про интеграции между системами](https://kirya522.tech/posts/api-integrations/)
+- [статья про синхронные и асинхронные коммуникации](https://kirya522.tech/posts/sync-async-communication/)
+- [обратная совместимость в форматах схем](https://docs.confluent.io/platform/current/schema-registry/fundamentals/schema-evolution.html)
+- [контракты событий, asyncAPI спецификация](https://www.asyncapi.com/docs/reference/specification/v3.0.0)
+- [openapi-generator](https://openapi-generator.tech/)
+- [swagger-codgen](https://openapi-generator.tech/)
+- [asyncAPI Code Generation](https://www.asyncapi.com/docs/tools/generator)
+- [json-schema](https://json-schema.org/)
+- [protobuf](https://protobuf.dev/)
+- [gRPC](https://grpc.io/docs/what-is-grpc/introduction/)
+- [apache avro](https://avro.apache.org/)
+- книга Building Microservices - Sam Newman
+- книга Designing Event Driven Systems - Ben Stopford
+- книга Designing Data-Intensive Applications - Martin Kleppmann
 
 ## Практика
 
@@ -282,7 +526,7 @@ weight = 2
 Пример фрагмента
 
 ```yml
-rder:
+order:
   type: object
   required:
     - id
