@@ -1,0 +1,52 @@
+asyncapi: 2.6.0
+info:
+  title: Orders Events API
+  version: 1.0.0
+  description: >
+    Event contracts published by Orders service.
+
+servers:
+  kafka:
+    url: localhost:9092
+    protocol: kafka
+    description: Local Kafka broker
+
+channels:
+  orders.order-created:
+    description: Order lifecycle events
+    publish:
+      summary: Order was successfully created
+      operationId: publishOrderCreated
+      message:
+        name: OrderCreated
+        contentType: application/json
+        payload:
+          $ref: '#/components/schemas/OrderCreated'
+
+components:
+  schemas:
+    OrderCreated:
+      type: object
+      required:
+        - event_id
+        - order_id
+        - user_id
+        - total_amount
+        - created_at
+      properties:
+        event_id:
+          type: string
+          format: uuid
+          description: Unique event identifier
+        order_id:
+          type: integer
+          format: int64
+        user_id:
+          type: integer
+          format: int64
+        total_amount:
+          type: number
+          format: double
+        created_at:
+          type: string
+          format: date-time
