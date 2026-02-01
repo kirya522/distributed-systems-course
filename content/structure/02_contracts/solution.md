@@ -137,7 +137,7 @@ components:
 Пример кодогенерации [клиентов в golang](https://www.speakeasy.com/docs/sdks/languages/golang/oss-comparison-go)
 Как сгенерировать по типам объектов.
 
-Детальное решение на [github]()
+Детальное решение на [github](https://github.com/kirya522/distributed-systems-course/tree/main/content/structure/02_contracts/code)
 
 DTO
 ```
@@ -188,7 +188,7 @@ ADR, с последствиями
 - `created_at` момент создания
 - `event_id` ключ идемпотентности события
 
-Детальное решение на [github]()
+Детальное решение на [github](https://github.com/kirya522/distributed-systems-course/tree/main/content/structure/02_contracts/code)
 
 `orders-events.yaml`
 
