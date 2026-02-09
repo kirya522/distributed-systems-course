@@ -204,3 +204,11 @@ OrderCreated → OrderPaid → OrderShipped
 - [Event Sourcing](https://martinfowler.com/eaaDev/EventSourcing.html)
 - [Backoff](https://aws.amazon.com/blogs/architecture/exponential-backoff-and-jitter/)
 - [Idempotent Consumer Patterns](https://microservices.io/patterns/communication-style/idempotent-consumer.html)
+
+## Контакты
+
+- [telegram канал](https://t.me/kirya522)
+- [telegram чат курса и канала](https://t.me/kirya522_chat)
+- [boosty автору напрямую](https://boosty.to/kirya522)
+
+{{< button href="https://boosty.to/kirya522" >}}Поддержать автора{{< /button >}}
