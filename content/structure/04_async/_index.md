@@ -28,6 +28,8 @@ weight = 4
 
 Асинхронность позволяет смягчить эти проблемы. Вместо прямого ожидания ответа, системы публикуют события или сообщения в очередь/поток, а другие компоненты обрабатывают их в собственном темпе. Это снижает связанность, улучшает устойчивость к отказам и повышает пропускную способность.
 
+![async requ](./img/async.jpg)
+
 ## Синхронное vs асинхронное взаимодействие
 
 | Характеристика                      | Синхронное | Асинхронное |
@@ -56,6 +58,8 @@ Event-Driven Architecture (EDA) — архитектурный стиль, в к
 - Поддерживает горизонтальное масштабирование;
 - Естественно сочетается с очередями/стримингом.
 
+![EDA](./img/async-comm-a-b.jpg)
+
 ## Очереди и стриминг как архитектурные компоненты
 
 Асинхронность базируется на механизмах очередей и потоков.
@@ -70,6 +74,8 @@ Event-Driven Architecture (EDA) — архитектурный стиль, в к
 - Когда нужна однопотребительская обработка;
 - При планировании фоновых задач.
 
+![queue](./img/queue.jpg)
+
 ### Потоки (Streams)
 
 Поток — последовательность сообщений, которые могут обрабатываться несколькими потребителями (partitioning).
@@ -79,6 +85,8 @@ Event-Driven Architecture (EDA) — архитектурный стиль, в к
 - Когда нужна высокая пропускная способность;
 - Для широковещательных событий;
 - Для разделения нагрузки между несколькими потребителями.
+
+![stream](./img/streaming.jpg)
 
 ## Отложенные события и фоновые задачи
 
@@ -94,6 +102,8 @@ Event-Driven Architecture (EDA) — архитектурный стиль, в к
 - Уменьшает задержки синхронных операций;
 - Повышает устойчивость системы;
 - Снижает влияние отказов сторонних сервисов.
+
+![delayed req](./img/async_req.jpg)
 
 ## Проблема дублей сообщений
 
@@ -125,6 +135,9 @@ Exactly-once требует:
 
 В реальных распределённых системах это невозможно гарантировать без центрального координирования и глобальных транзакций, которые блокируют масштабирование.
 Реально проектируется под **at-least-once + идемпотентность**.
+И получем потенциальный **exactly-once** с оговорками.
+
+![once](./img/once.jpg)
 
 ## Идемпотентность обработчиков
 
@@ -142,22 +155,13 @@ Exactly-once требует:
 - Определять дубликаты
 - Игнорировать повторные обработки
 
+![idempotent](./img/idempotent.jpg)
+
 ## Outbox pattern как способ синхронизации
 
 Outbox pattern решает известную проблему dual write:
 когда изменение в базе данных и публикация события в брокер не могут быть атомарными по умолчанию.
-
-**Идея:**
-
-- В той же транзакции, где меняются бизнес-данные, записывается запись в таблицу outbox
-- Внешний процесс (poller) читает outbox и публикует события в брокер
-- После публикации событие помечается как отправленное
-
-**Что получаем:**
-
-- Устраняет потерю событий
-- Обеспечивает атомарность записи + публикации в логическом смысле
-- Делает возможной надежную асинхронную коммуникацию
+Подробно разобран в [предыдущем модуле](../03_consistency/_index.md#transactional-outbox-паттерн-outbox)
 
 ## CQRS и event sourcing
 
@@ -195,12 +199,15 @@ OrderCreated → OrderPaid → OrderShipped
 - Сложность модели
 - Необходимость сжатия/снапшотов (для опимизации работы)
 
+![es](./img/event.jpg)
+
 ## Дополнительные источники
 
 - [Event-Driven Architecture](https://martinfowler.com/articles/201701-event-driven.html) — Martin Fowler
 - [Outbox Pattern](https://microservices.io/patterns/data/transactional-outbox.html)
 - [Exactly-Once Semantics](https://exactly-once.github.io/posts/exactly-once-delivery/)
 - [CQRS](https://martinfowler.com/bliki/CQRS.html)
+- [CQRS medium](https://medium.com/learn-agile-practices/cqrs-pattern-advantages-of-command-and-queries-fd83396dd942)
 - [Event Sourcing](https://martinfowler.com/eaaDev/EventSourcing.html)
 - [Backoff](https://aws.amazon.com/blogs/architecture/exponential-backoff-and-jitter/)
 - [Idempotent Consumer Patterns](https://microservices.io/patterns/communication-style/idempotent-consumer.html)
